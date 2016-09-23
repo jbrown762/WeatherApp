@@ -1,0 +1,5 @@
+org\ssa\ironyard\controller\WeatherController.class
+org\ssa\ironyard\service\WeatherService.class
+org\ssa\ironyard\WeatherStarter.class
+org\ssa\ironyard\model\WeatherObj.class
+org\ssa\ironyard\service\WeatherServiceImpl.class

@@ -1,0 +1,141 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+	<header>
+		<h2 id="logo">WEATHER</h2>
+
+		<ul id="navBar">
+			<li id="oneLoc">Your Weather</li>
+			<li id="compareLocs">Compare Weather</li>
+			<li id=""></li>
+		</ul>
+	</header>
+
+
+
+	
+	<section id ="oneLocSection">
+	<input id="zipcodeOne" type="text" placeholder="ZIP Code" >
+	<input id="btnEnterOne" type="button" value="Weather Me!">
+	<br>
+	<span>weather for </span>
+	<span id = "locCityState"></span>
+	<div id = "locWeather"></div>
+	<br>
+	<div>current temp:</div>
+	<span id = "locTemp"></span>
+	
+	</section>
+	
+	
+	
+	<section id = "compareSection">
+	<h3>Add ZIP codes to the list below!</h3>
+	<input id="zipcodeCompare" type="text" placeholder="ZIP Code" >
+	<input id="btnEnterCompare" type="button" value="Add to list!">
+	<br>
+	<br>
+	<br>
+	<table id="tableDisplay">
+		<tr id="tableHeadings">
+			<td>ZIP</td>
+			<td>City</td>
+			<td>State</td>
+			<td>Temp (F)</td>
+			<td>Weather</td>
+			<td>Wind (mph)</td>
+		</tr>
+	</table>
+	</section>
+
+
+	<script src="/jquery-3.1.0.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()//This is started on the load of the page
+		{
+			$('#compareSection').hide();
+
+			$('#oneLoc').click(function() {
+				$('#compareSection').hide();
+				$('#oneLocSection').show();
+			});
+			
+			$('#compareLocs').click(function() {
+				$('#oneLocSection').hide();
+				$('#compareSection').show();
+
+			});			
+			
+			$('#btnEnterCompare').click(function() {
+				console.log($('#zipcodeCompare').val())
+				$.getJSON("weather/" + $('#zipcodeCompare').val(), addToWeatherTable);
+			});
+			
+			$('#btnEnterOne').click(function() {
+				console.log($('#zipcodeOne').val())
+				$.getJSON("weather/" + $('#zipcodeOne').val(), oneLocWeather);
+			});
+		});
+		
+		function oneLocWeather(response) {
+			var json = $.parseJSON(response[0]);
+
+			console.log(response.length);
+			console.log(json)
+
+			$('#locCityState').text(json.current_observation.observation_location.full)
+			$('#locWeather').html('<img src= ' + json.current_observation.icon_url + ' height="64px" width="64px">');
+			$('#locTemp').text(json.current_observation.temp_f + " F")
+			
+		}
+
+		function addToWeatherTable(response) {
+			var json = $.parseJSON(response[0]);
+
+			console.log(response.length);
+			console.log(json)
+
+			var zipId = $('#zipcodeCompare').val();
+			var trElement = document.createElement("tr");
+			trElement.id = zipId;
+
+			var tdElement = document.createElement("td");
+			tdElement.className = "zipcode";
+			tdElement.innerHTML = json.current_observation.display_location.zip;
+			trElement.appendChild(tdElement);
+
+			var tdElement = document.createElement("td");
+			tdElement.className = "cityData";
+			tdElement.innerHTML = json.current_observation.display_location.city;
+			trElement.appendChild(tdElement);
+
+			var tdElement = document.createElement("td");
+			tdElement.className = "stateData";
+			tdElement.innerHTML = json.current_observation.display_location.state;
+			trElement.appendChild(tdElement);
+
+			var tdElement = document.createElement("td");
+			tdElement.className = "tempF";
+			tdElement.innerHTML = json.current_observation.temp_f;
+			trElement.appendChild(tdElement);
+
+			var tdElement = document.createElement("td");
+			tdElement.className = "weather";
+			tdElement.innerHTML = json.current_observation.weather;
+			trElement.appendChild(tdElement);
+
+			var tdElement = document.createElement("td");
+			tdElement.className = "weather";
+			tdElement.innerHTML = json.current_observation.wind_mph;
+			trElement.appendChild(tdElement);
+
+			$('#tableDisplay').append(trElement);
+
+		}
+	</script>
+</body>
+
+
+</html>

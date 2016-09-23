@@ -1,0 +1,48 @@
+header{
+	height: 7em;
+}
+
+#oneLocSection{
+	width: 50%
+}
+
+td {
+	width: 100px;
+	height: 30px;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table, th, td {
+	border: 1px solid black;
+	text-align: center;
+}
+
+#tableHeadings {
+	background-color: #80ffff;
+}
+
+#navBar {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #333;
+}
+
+
+#navBar li {
+	float: left;
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+#navBar li:hover {
+	background-color: #111;
+}
