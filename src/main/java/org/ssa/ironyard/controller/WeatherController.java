@@ -32,17 +32,16 @@ public class WeatherController {
     WeatherService service;
         
     
-    @RequestMapping(value = "")
+    @RequestMapping(value = {"","/"})
     public String home()
     {
-        return "Weather.html";     
+        return "WeatherAngular.html";  
     }
     
     @RequestMapping(produces = "application/json", value ="/{zipcode}", method = RequestMethod.GET)
     @ResponseBody
     public List<String> getForecast(@PathVariable String zipcode)
     {
-        
         service = new WeatherServiceImpl();
         
         return service.getWeather(zipcode);

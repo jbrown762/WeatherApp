@@ -7,25 +7,26 @@
 		<h2 id="logo">WEATHER</h2>
 
 		<ul id="navBar">
-			<li id="oneLoc" ng-click="showLoc = true; showCompare = false">Your
+			<li id="oneLoc" ng-click="WC.showLoc = true; WC.showCompare = false">Your
 				Weather</li>
-			<li id="compareLocs" ng-click="showCompare = true; showLoc = false">Compare
+			<li id="compareLocs" ng-click="WC.showCompare = true; WC.showLoc = false">Compare
 				Weather</li>
 			<li id=""></li>
 		</ul>
 	</header>
 
-
-	<section id="oneLocSection" ng-show="showLoc">
-		<form ng-submit="WC.addWeather(false)">
-			<input id="zipcodeOne" type="text" placeholder="ZIP Code" ng-model="WC.singleZip"> 
-			<input id="btnEnterOne" type="submit" ng-disabled="!WC.singleZip" value="Weather Me!"> <br><br>
-			<div>weather for </div>
+	<section id="oneLocSection" ng-show="WC.showLoc">
+		<form ng-submit="WC.newOneWeather()">
+			<input id="zipcodeOne" type="text" placeholder="ZIP Code"
+				ng-model="WC.singleZip"> <input id="btnEnterOne"
+				type="submit" ng-disabled="!WC.singleZip" value="Weather Me!">
+			<br> <br>
+			<div>weather for</div>
 			<div class="info">{{ WC.oneWeather[0].full }}</div>
-			<br><br>
+			<br> <br>
 			<div>current temp</div>
 			<div class="info">{{ WC.oneWeather[0].tempF }}</div>
-			<br><br>
+			<br> <br>
 			<div>current weather</div>
 			<div class="info">{{ WC.oneWeather[0].weather }}</div>
 		</form>
@@ -33,9 +34,9 @@
 	</section>
 
 
-	<section id="compareSection" ng-show="showCompare">
+	<section id="compareSection" ng-show="WC.showCompare">
 		<h3>Add ZIP codes to the list below!</h3>
-		<form ng-submit="WC.addWeather(true)">
+		<form ng-submit="WC.addWeatherToTable()">
 			<input id="zipcodeCompare" type="text" placeholder="ZIP Code"
 				ng-model="WC.newZip"> <input ng-disabled="!WC.newZip"
 				id="btnEnterCompare" type="submit" value="Add to list!"> <br>
@@ -66,33 +67,32 @@
 	<script type="text/javascript">
 		angular.module('weather', []).controller("WeatherController", function($http) {
 
-			var self = this;
+			var controller = this;
+			controller.showLoc = true;
 
-			self.weathers = [];
+			controller.weathers = [];
+			controller.oneWeather = [];
 
-			self.oneWeather = [];
+			controller.newZip = "";
+			controller.singleZip = "";
 
-			this.newZip = "";
-			this.singleZip = "";
-
-			this.addWeather = function(many) {
-
-				if (many === true) {
-					$http.get('weather/' + self.newZip).then(function(response) {
-						console.log(JSON.parse(response.data[0]));
-						self.add(JSON.parse(response.data[0]));
-					})
-				} else {
-					$http.get('weather/' + self.singleZip).then(function(response) {
-						console.log(JSON.parse(response.data[0]));
-						self.addOneWeather(JSON.parse(response.data[0]));
-					})
-				}
+			controller.newOneWeather = function() {
+				$http.get('weather/' + controller.singleZip).then(function(response) {
+					console.log(JSON.parse(response.data[0]));
+					controller.oneWeatherDisplay(JSON.parse(response.data[0]));
+				})
 			};
 
-			this.newZip = "";
-			this.add = function(json) {
-				this.weathers.push({
+			controller.addWeatherToTable = function() {
+				$http.get('weather/' + controller.newZip).then(function(response) {
+					console.log(JSON.parse(response.data[0]));
+					controller.addToTable(JSON.parse(response.data[0]));
+				})
+			};
+
+			controller.newZip = "";
+			controller.addToTable = function(json) {
+				controller.weathers.push({
 					zip : json.current_observation.display_location.zip,
 					city : json.current_observation.display_location.city,
 					state : json.current_observation.display_location.state,
@@ -100,12 +100,12 @@
 					weather : json.current_observation.weather,
 					wind : json.current_observation.wind_mph
 				})
-				this.newZip = "";
+				controller.newZip = "";
 			}
 
-			this.addOneWeather = function(json) {
-				this.oneWeather = [];
-				this.oneWeather.push({
+			controller.oneWeatherDisplay = function(json) {
+				controller.oneWeather = [];
+				controller.oneWeather.push({
 					zip : json.current_observation.display_location.zip,
 					city : json.current_observation.display_location.city,
 					state : json.current_observation.display_location.state,
@@ -115,7 +115,7 @@
 					wind : json.current_observation.wind_mph
 				})
 				console.log(this.oneWeather.length);
-				this.singleZip = "";
+				controller.singleZip = "";
 			}
 
 		});
