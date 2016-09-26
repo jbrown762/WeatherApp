@@ -9,26 +9,35 @@
 		<ul id="navBar">
 			<li id="oneLoc" ng-click="WC.showLoc = true; WC.showCompare = false">Your
 				Weather</li>
-			<li id="compareLocs" ng-click="WC.showCompare = true; WC.showLoc = false">Compare
+			<li id="compareLocs"
+				ng-click="WC.showCompare = true; WC.showLoc = false">Compare
 				Weather</li>
 			<li id=""></li>
 		</ul>
 	</header>
 
 	<section id="oneLocSection" ng-show="WC.showLoc">
+		<h3>Enter your ZIP code to display your weather!</h3>
+
 		<form ng-submit="WC.newOneWeather()">
 			<input id="zipcodeOne" type="text" placeholder="ZIP Code"
 				ng-model="WC.singleZip"> <input id="btnEnterOne"
 				type="submit" ng-disabled="!WC.singleZip" value="Weather Me!">
 			<br> <br>
-			<div>weather for</div>
-			<div class="info">{{ WC.oneWeather[0].full }}</div>
-			<br> <br>
-			<div>current temp</div>
-			<div class="info">{{ WC.oneWeather[0].tempF }}</div>
-			<br> <br>
-			<div>current weather</div>
-			<div class="info">{{ WC.oneWeather[0].weather }}</div>
+			<div ng-show="WC.showWeather">
+				<div>weather for</div>
+				<div class="info">{{ WC.oneWeather[0].full }}</div>
+				<br> <br>
+				<div>current temp</div>
+				<div class="info">{{ WC.oneWeather[0].tempF }}</div>
+				<br> <br>
+
+				<div>current weather</div>
+				<span id="weatherIconSpan" class="info"> <img
+					ng-src="{{ WC.oneWeather[0].weather_icon }}"> {{
+					WC.oneWeather[0].weather }}
+				</span>
+			</div>
 		</form>
 
 	</section>
@@ -69,6 +78,7 @@
 
 			var controller = this;
 			controller.showLoc = true;
+			controller.showWeather = false;
 
 			controller.weathers = [];
 			controller.oneWeather = [];
@@ -77,6 +87,7 @@
 			controller.singleZip = "";
 
 			controller.newOneWeather = function() {
+				controller.showWeather = false;
 				$http.get('weather/' + controller.singleZip).then(function(response) {
 					console.log(JSON.parse(response.data[0]));
 					controller.oneWeatherDisplay(JSON.parse(response.data[0]));
@@ -112,10 +123,12 @@
 					full : json.current_observation.display_location.full,
 					tempF : json.current_observation.temp_f,
 					weather : json.current_observation.weather,
+					weather_icon : json.current_observation.icon_url,
 					wind : json.current_observation.wind_mph
 				})
 				console.log(this.oneWeather.length);
 				controller.singleZip = "";
+				controller.showWeather = true;
 			}
 
 		});

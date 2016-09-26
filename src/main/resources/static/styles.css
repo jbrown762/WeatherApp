@@ -1,23 +1,31 @@
-header{
+header {
 	height: 7em;
 }
 
-#oneLocSection{
+body{
+	background-color: #eeeeee;
+}
+
+#oneLocSection {
 	width: 50%
 }
 
-#oneLocSection div{
+#oneLocSection div {
 	font-size: 20px;
 	font-family: "Arial Black", Gadget, sans-serif;
 	color: green
-	
 }
 
-#oneLocSection .info{
+#oneLocSection .info {
 	font-size: 25px;
 	font-family: "Arial Black", Gadget, sans-serif;
 	color: black
-	
+}
+
+#weatherIconSpan {
+	display: inline-block;
+	padding-right:3px;
+	padding-top: 3px
 }
 
 td {
@@ -45,7 +53,6 @@ table, th, td {
 	overflow: hidden;
 	background-color: #333;
 }
-
 
 #navBar li {
 	float: left;
